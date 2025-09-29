@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/lib/auth-context";
 import { Stack, useRouter } from "expo-router";
 import { useEffect } from "react";
 
@@ -22,12 +23,14 @@ function RouteGuard({children} :{children : React.ReactNode}){
 export default function RootLayout() {
   // The Stack component manages the navigation stack for the app. It represent the current screen.
   return (
-    <RouteGuard>
+    <AuthProvider>
+      <RouteGuard>
         <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown:false }} />                        
-            <Stack.Screen name="auth" options={{ headerShown: false }} />
-        </ Stack>
-    </RouteGuard>
+            {/* <Stack.Screen name="auth" options={{ headerShown: false }} /> */}
+        </Stack>
+      </RouteGuard>
+    </AuthProvider>
       
   ); 
 }

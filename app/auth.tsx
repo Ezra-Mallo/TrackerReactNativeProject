@@ -4,8 +4,8 @@ import { useState } from "react";
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from "react-native";
 import { Button, Text, TextInput, useTheme } from "react-native-paper";
 
-export default function AutScreen(){
-    const [isSignUp, setIsSignUp] = useState<Boolean>(false); // false means Sign In mode, true means Sign Up mode
+export default function AuthScreen(){
+    const [isSignUp, setIsSignUp] = useState<boolean>(false); // false means Sign In mode, true means Sign Up mode
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [error, setError] = useState<string | null>("");

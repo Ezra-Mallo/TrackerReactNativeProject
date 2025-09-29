@@ -1,18 +1,40 @@
-import React, { createContext, useContext } from "react";
-import { ID } from "react-native-appwrite";
+import React, { createContext, useContext, useEffect } from "react";
+import { ID, Models } from "react-native-appwrite";
 import { account } from "./appwrite";
 
 type AuthContextType = {
-    // user: Models.User<Models.Preferences> | null;
+    user: Models.User<Models.Preferences> | null;
+    isLoadingUser: boolean;
     signUp: (email: string, password: string) => Promise<string | null>; // Returns error message or null on success
     signIn: (email: string, password: string) => Promise<string | null>; // Returns error message or null on success
+    signOut: () => Promise<void>;
+
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children } : { children: React.ReactNode }) {
+    const [user, setUser] = React.useState<Models.User<Models.Preferences> | null>(null);
+    
+    const [isLoadingUser, setIsLoadingUser] = React.useState<boolean>(true);
+
+    useEffect(() => {
+        getUser();
+    }, []);
+
+    const getUser = async () => {
+        try {
+            const session = await account.get();
+            setUser(session);   
+        } catch (error) {
+            setUser(null);
+        } finally {
+            setIsLoadingUser(false);
+        }
+    };
+
     const signUp = async (email: string, password: string) => {
-        try{
+        try {
             await account.create(ID.unique(), email, password);
             await signIn(email, password);
             return null; // Indicate success
@@ -21,12 +43,15 @@ export function AuthProvider({ children } : { children: React.ReactNode }) {
                 return error.message; // Return the error message
             }
             
-            return "An error occurred during sign up"                       
+            return "An error occurred during sign up";                 
         }
     };
+
     const signIn = async (email: string, password: string) => {
-        try{
+        try {
             await account.createEmailPasswordSession(email, password);  
+            const session = await account.get();
+            setUser(session);
             return null; // Indicate success          
         } catch (error) {
             if (error instanceof Error) {
@@ -37,9 +62,17 @@ export function AuthProvider({ children } : { children: React.ReactNode }) {
         }
     };
     
+    const signOut = async() => {
+        try {
+            await account.deleteSession("current");
+            setUser(null);
+        } catch (error) {
+            console.error("Error signing out:", error);
+        }
+    }
+
     return (
-        // <AuthContext.Provider value={{ user, singUp, signIn }}>
-        <AuthContext.Provider value={{ signUp, signIn }}>
+        <AuthContext.Provider value={{user, isLoadingUser, signUp, signIn, signOut }}>
             {children} 
         </AuthContext.Provider>
     );
@@ -51,4 +84,4 @@ export function useAuth(){
         throw new Error("useAuth must be used within an AuthProvider");
     }
     return context;
-}
+} 
