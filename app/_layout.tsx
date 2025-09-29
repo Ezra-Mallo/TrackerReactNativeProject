@@ -7,7 +7,7 @@ function RouteGuard({children} :{children : React.ReactNode}){
   const {user, isLoadingUser} = useAuth();
   const segments = useSegments();
   // const isAuth = false;
-  console.log('🔍 AUTH STATUS - loading:', isLoadingUser, 'user:', user ? 'exists' : 'null', 'segment:', segments[0]);
+  // console.log('🔍 AUTH STATUS - loading:', isLoadingUser, 'user:', user ? 'exists' : 'null', 'segment:', segments[0]);
   
   useEffect(() => {
     // This small timeout ensures navigation is mounted
@@ -34,7 +34,7 @@ export default function RootLayout() {
       <RouteGuard>
           <Stack>
               <Stack.Screen name="(tabs)" options={{ headerShown:false }} />                        
-              <Stack.Screen name="auth" options={{ headerShown: false }} />
+              {/* <Stack.Screen name="auth" options={{ headerShown: false }} /> */}
           </Stack>
       </RouteGuard>
     </AuthProvider>

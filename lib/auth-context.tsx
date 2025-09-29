@@ -15,12 +15,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children } : { children: React.ReactNode }) {
     const [user, setUser] = React.useState<Models.User<Models.Preferences> | null>(null);
-    
     const [isLoadingUser, setIsLoadingUser] = React.useState<boolean>(true);
 
     useEffect(() => {
         getUser();
-    }, []);
+    }, []);  //This empty dependency array [] will eliminate it reloading and refreshing.
 
     const getUser = async () => {
         try {
@@ -67,7 +66,7 @@ export function AuthProvider({ children } : { children: React.ReactNode }) {
             await account.deleteSession("current");
             setUser(null);
         } catch (error) {
-            console.error("Error signing out:", error);
+            console.log("Error signing out:", error);
         }
     }
 
