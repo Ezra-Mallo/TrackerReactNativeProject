@@ -87,6 +87,7 @@ export default function AuthScreen(){
                          >
                     </TextInput>
                     
+                    {/* this displays error  */}
                     {error && <Text style={{color: theme.colors.error }}> {error} </Text>}
                     {/* {error ? <Text style={{ color: 'red', marginBottom: 8 }}>{error}</Text> : null} */}
 
